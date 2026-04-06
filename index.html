@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe UNICEF — Donaciones Recurrentes 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --blue:    #0B5FFF;
+    --blue-d:  #003DB3;
+    --blue-l:  #E8F0FF;
+    --teal:    #00B38A;
+    --teal-l:  #E0F7F2;
+    --amber:   #E07B00;
+    --amber-l: #FFF4E0;
+    --red:     #D63B3B;
+    --red-l:   #FEF0F0;
+    --ink:     #0F1117;
+    --ink2:    #3A3D4A;
+    --ink3:    #6B7080;
+    --line:    #E4E6EF;
+    --bg:      #F5F6FA;
+    --white:   #FFFFFF;
+    --nav-h:   64px;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans:  'DM Sans', sans-serif;
+    --mono:  'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--nav-h);
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center;
+    padding: 0 2rem;
+    gap: 2rem;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--blue); display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo svg { width: 18px; height: 18px; fill: white; }
+  .nav-title { font-family: var(--serif); font-size: 17px; color: var(--ink); }
+  .nav-links { display: flex; gap: 0; margin-left: auto; }
+  .nav-links a {
+    font-size: 13px; font-weight: 500; color: var(--ink3);
+    text-decoration: none; padding: 6px 14px; border-radius: 6px;
+    transition: color .15s, background .15s;
+  }
+  .nav-links a:hover { color: var(--blue); background: var(--blue-l); }
+  .nav-badge {
+    margin-left: 1rem; font-size: 11px; font-weight: 600; letter-spacing: .04em;
+    background: var(--blue); color: white;
+    padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--ink);
+    padding: 5rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(11,95,255,.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 400px; gap: 4rem; align-items: center;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--blue); background: rgba(11,95,255,.15);
+    padding: 5px 12px; border-radius: 20px; margin-bottom: 1.2rem;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .hero h1 {
+    font-family: var(--serif); font-size: clamp(2.4rem, 5vw, 3.6rem);
+    color: white; line-height: 1.1; margin-bottom: 1rem;
+  }
+  .hero h1 em { color: #5B8FFF; font-style: italic; }
+  .hero-sub { color: rgba(255,255,255,.6); font-size: 16px; max-width: 480px; }
+  .hero-meta {
+    display: flex; gap: 2rem; margin-top: 2rem;
+  }
+  .hero-meta-item { }
+  .hero-meta-item .label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 2px; }
+  .hero-meta-item .value { font-size: 14px; color: rgba(255,255,255,.85); font-weight: 500; }
+
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 14px; padding: 1.2rem;
+    backdrop-filter: blur(8px);
+    opacity: 0; transform: translateY(16px);
+    animation: fadeUp .5s forwards;
+  }
+  .hero-stat:nth-child(1){animation-delay:.1s}
+  .hero-stat:nth-child(2){animation-delay:.2s}
+  .hero-stat:nth-child(3){animation-delay:.3s}
+  .hero-stat:nth-child(4){animation-delay:.4s}
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+  .hero-stat .stat-val {
+    font-family: var(--serif); font-size: 2rem; color: white; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat .stat-lbl { font-size: 12px; color: rgba(255,255,255,.5); font-weight: 400; line-height: 1.3; }
+  .hero-stat .stat-sub { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 4px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+  .section { padding: 3.5rem 0; }
+  .section + .section { border-top: 1px solid var(--line); }
+
+  .section-header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 1.8rem; gap: 1rem;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 4px;
+  }
+  .section-title {
+    font-family: var(--serif); font-size: 1.8rem; color: var(--ink); line-height: 1.2;
+  }
+  .section-desc { color: var(--ink3); font-size: 14px; max-width: 540px; line-height: 1.6; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 1rem; }
+  .card-subtitle { font-size: 12px; color: var(--ink3); margin-top: 6px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+
+  /* ── CHART CONTAINERS ── */
+  .chart-wrap { position: relative; }
+
+  /* ── STAT PILL ── */
+  .stat-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .stat-pill.up { background: var(--teal-l); color: var(--teal); }
+  .stat-pill.down { background: var(--red-l); color: var(--red); }
+  .stat-pill.neutral { background: var(--blue-l); color: var(--blue); }
+
+  /* ── INSIGHT CARDS ── */
+  .insights-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; }
+  .insight {
+    border-radius: 14px; padding: 1.2rem 1.4rem;
+    border-left: 4px solid;
+    background: var(--white);
+    border-top: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .insight:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
+  .insight.green { border-left-color: var(--teal); }
+  .insight.red   { border-left-color: var(--red); }
+  .insight.blue  { border-left-color: var(--blue); }
+  .insight.amber { border-left-color: var(--amber); }
+  .insight-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--ink); }
+  .insight-body  { font-size: 13px; color: var(--ink3); line-height: 1.55; }
+
+  /* ── MOTIVO BARS ── */
+  .motivo { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .motivo-lbl { font-size: 13px; color: var(--ink2); min-width: 220px; }
+  .motivo-track { flex: 1; height: 22px; background: var(--bg); border-radius: 6px; overflow: hidden; }
+  .motivo-fill {
+    height: 100%; border-radius: 6px;
+    display: flex; align-items: center; padding: 0 10px;
+    font-size: 11px; font-weight: 600;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .motivo-count { min-width: 60px; text-align: right; font-size: 12px; font-weight: 600; color: var(--ink2); }
+
+  /* ── CORR BADGES ── */
+  .corr-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.5rem; }
+  .corr-card {
+    border-radius: 12px; padding: 1rem; text-align: center;
+    border: 1px solid var(--line); background: var(--white);
+  }
+  .corr-r { font-family: var(--mono); font-size: 1.5rem; font-weight: 500; margin-bottom: 4px; }
+  .corr-lbl { font-size: 12px; color: var(--ink3); line-height: 1.4; }
+
+  /* ── TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .data-table th {
+    background: var(--ink); color: white;
+    padding: 8px 14px; text-align: left;
+    font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .data-table th:first-child { border-radius: 8px 0 0 8px; }
+  .data-table th:last-child { border-radius: 0 8px 8px 0; }
+  .data-table td { padding: 8px 14px; border-bottom: 1px solid var(--line); color: var(--ink2); }
+  .data-table tr:nth-child(even) td { background: var(--bg); }
+  .data-table tr:hover td { background: var(--blue-l); }
+  .peak { font-weight: 600; color: var(--teal) !important; }
+  .min-val { color: var(--red) !important; }
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--line); }
+
+  /* ── LEGEND ── */
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink3); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,.4);
+    text-align: center; padding: 2rem;
+    font-size: 12px; margin-top: 4rem;
+  }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 1.2rem; background: var(--bg); border-radius: 10px; padding: 4px; width: fit-content; }
+  .tab-btn {
+    font-size: 13px; font-weight: 500; padding: 6px 16px; border-radius: 7px;
+    border: none; background: transparent; cursor: pointer; color: var(--ink3);
+    transition: all .15s;
+  }
+  .tab-btn.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-stats { display: none; }
+    .grid-2, .grid-3, .insights-grid, .corr-grid { grid-template-columns: 1fr; }
+    .motivo-lbl { min-width: 140px; font-size: 12px; }
+    nav { padding: 0 1rem; gap: 1rem; }
+    .nav-links { display: none; }
+    .container { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <span class="nav-title">UNICEF · Donaciones</span>
+  </a>
+  <div class="nav-links">
+    <a href="#altas">Altas</a>
+    <a href="#bajas">Bajas</a>
+    <a href="#correlacion">Correlación</a>
+    <a href="#insights">Insights</a>
+  </div>
+  <span class="nav-badge">Ene 2025 – Mar 2026</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid container" style="max-width:1100px;margin:0 auto;">
+    <div>
+      <div class="hero-tag">Informe analítico confidencial</div>
+      <h1>Donaciones<br><em>Recurrentes</em><br>UNICEF Argentina</h1>
+      <p class="hero-sub">Análisis de altas (DA) y bajas (UF) sobre 15 meses de gestión. Volumen, monto promedio, retención y correlaciones estadísticas.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="label">Período</div>
+          <div class="value">Ene 2025 – Mar 2026</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Fuente</div>
+          <div class="value">ESTIMACION_NOTAS_DE_CREDITO</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Hojas analizadas</div>
+          <div class="value">27 hojas DA + UF</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-val">14.180</div>
+        <div class="stat-lbl">Total altas<br>del período</div>
+        <div class="stat-sub">945 prom. mensual</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-val">$16.383</div>
+        <div class="stat-lbl">Monto promedio<br>de donación</div>
+        <div class="stat-sub">+25,7% en el año</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-val">$2.323M</div>
+        <div class="stat-lbl">Volumen total<br>recaudado</div>
+        <div class="stat-sub">ARS acumulados</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-val">7,1%</div>
+        <div class="stat-lbl">Tasa de baja<br>promedio</div>
+        <div class="stat-sub">143 bajas totales</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECCIÓN 1: ALTAS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="altas" class="container">
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Sección 1</div>
+      <h2 class="section-title">Volumen de altas mensuales</h2>
+    </div>
+    <p class="section-desc">Evolución de nuevas donaciones captadas por mes y su monto promedio.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">Altas mensuales vs. monto promedio</div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#0B5FFF;opacity:.75"></span>Altas (Ene–Ago 25)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#D63B3B;opacity:.75"></span>Altas (Sep–Dic 25)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#999;opacity:.6"></span>Altas (2026)</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#E07B00"></span>Monto promedio</div>
+    </div>
+    <div class="chart-wrap" style="height:300px;">
+      <canvas id="chartAltas"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Total donaciones por mes ($M)</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="chartTotal"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+        <div class="card-title" style="margin:0">Tabla mensual detallada</div>
+        <span class="stat-pill up">↑ Ago pico</span>
+      </div>
+      <div class="table-wrap" style="max-height:260px;overflow-y:auto;">
+        <table class="data-table">
+          <thead><tr><th>Mes</th><th>Altas</th><th>Monto prom.</th><th>Total</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECCIÓN 2: BAJAS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="bajas" class="container">
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Sección 2</div>
+      <h2 class="section-title">Análisis de bajas (UF)</h2>
+    </div>
+    <p class="section-desc">Tasa de deserción mensual y principales causas registradas.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">Tasa de baja mensual (%)</div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#D63B3B;opacity:.8"></span>Tasa &gt; 10% — alerta</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#E07B00;opacity:.8"></span>Tasa 7–10% — atención</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#85B7EB;opacity:.8"></span>Tasa &lt; 7% — estable</div>
+    </div>
+    <div class="chart-wrap" style="height:240px;">
+      <canvas id="chartBajas"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Causas de baja registradas</div>
+      <div style="margin-top:.5rem;">
+        <div class="motivo">
+          <span class="motivo-lbl">No especifica</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:100%;background:#C7D9FF;color:#003DB3">32,9%</div></div>
+          <span class="motivo-count">47 casos</span>
+        </div>
+        <div class="motivo">
+          <span class="motivo-lbl">TC irrecuperable</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:85%;background:#FFC5C5;color:#8B0000">28,0%</div></div>
+          <span class="motivo-count">40 casos</span>
+        </div>
+        <div class="motivo">
+          <span class="motivo-lbl">Problemas económicos</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:49%;background:#FFE0A0;color:#6B3A00">16,1%</div></div>
+          <span class="motivo-count">23 casos</span>
+        </div>
+        <div class="motivo">
+          <span class="motivo-lbl">Se arrepintió / cambió de opinión</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:38%;background:#C0EDD9;color:#005533">12,6%</div></div>
+          <span class="motivo-count">18 casos</span>
+        </div>
+        <div class="motivo">
+          <span class="motivo-lbl">Desempleado</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:6%;background:#E0D8FF;color:#3C2B80"></div></div>
+          <span class="motivo-count">3 casos</span>
+        </div>
+        <div class="motivo">
+          <span class="motivo-lbl">Otros motivos</span>
+          <div class="motivo-track"><div class="motivo-fill" style="width:8%;background:#E0E0E0;color:#444"></div></div>
+          <span class="motivo-count">12 casos</span>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--ink3);margin-top:1rem;">Total bajas: 143 · Monto prom. baja: $15.878</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Distribución de causas</div>
+      <div class="chart-wrap" style="height:240px;">
+        <canvas id="chartDonut"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECCIÓN 3: CORRELACIÓN -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="correlacion" class="container">
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Sección 3</div>
+      <h2 class="section-title">¿Más monto = menos altas?</h2>
+    </div>
+    <p class="section-desc">Análisis estadístico de la relación entre ticket promedio y volumen de captación.</p>
+  </div>
+
+  <div class="corr-grid">
+    <div class="corr-card">
+      <div class="corr-r" style="color:var(--ink3)">r = 0,31</div>
+      <div class="corr-lbl">Correlación global<br><strong>Relación débil (R²=9,8%)</strong></div>
+    </div>
+    <div class="corr-card" style="background:var(--teal-l);border-color:#A0DDD0;">
+      <div class="corr-r" style="color:var(--teal)">r = +0,71</div>
+      <div class="corr-lbl">Ene–Ago 2025<br><strong>Crecimiento conjunto fuerte</strong></div>
+    </div>
+    <div class="corr-card" style="background:var(--red-l);border-color:#FFBCBC;">
+      <div class="corr-r" style="color:var(--red)">r = −0,66</div>
+      <div class="corr-lbl">Sep–Dic 2025<br><strong>Relación inversa moderada</strong></div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Dispersión monto promedio vs. altas</div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#0B5FFF"></span>Ene–Ago 25</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#D63B3B"></span>Sep–Dic 25</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#999"></span>2026</div>
+      </div>
+      <div class="chart-wrap" style="height:280px;">
+        <canvas id="chartScatter"></canvas>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:1rem;">
+      <div class="card-title">Interpretación por fases</div>
+      <div style="background:var(--teal-l);border-radius:10px;padding:1rem;border-left:4px solid var(--teal);">
+        <div style="font-size:13px;font-weight:600;color:var(--teal);margin-bottom:6px;">Fase 1 — Ene a Ago 2025</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.55;">Monto promedio y altas crecen juntas. Campañas F2F en expansión, ingreso a nuevas plazas de mayor ticket. El pico fue agosto con 1.510 altas y $16.713 promedio simultáneos.</div>
+      </div>
+      <div style="background:var(--red-l);border-radius:10px;padding:1rem;border-left:4px solid var(--red);">
+        <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:6px;">Fase 2 — Sep a Dic 2025</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.55;">El monto promedio alcanza su pico ($18.280 en Nov-25), pero el volumen cae casi a la mitad. Posible cambio estratégico hacia captación de donantes de mayor ticket con menor volumen masivo.</div>
+      </div>
+      <div style="background:var(--blue-l);border-radius:10px;padding:1rem;border-left:4px solid var(--blue);">
+        <div style="font-size:13px;font-weight:600;color:var(--blue);margin-bottom:6px;">Conclusión estadística</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.55;">No existe una relación lineal única. Los factores estacionales y de capacidad operativa determinan el volumen, no el ticket promedio. Ambas variables requieren gestión independiente.</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SECCIÓN 4: INSIGHTS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="insights" class="container">
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Sección 4</div>
+      <h2 class="section-title">Insights y recomendaciones</h2>
+    </div>
+  </div>
+
+  <div class="insights-grid">
+    <div class="insight green">
+      <div class="insight-title">Agosto 2025: el mejor mes del período</div>
+      <div class="insight-body">Con 1.510 altas y solo 1,9% de tasa de baja, agosto es el punto óptimo de captación y retención. Identificar y replicar las condiciones de ese mes (plazas, facers, script) debe ser prioritario para futuras campañas.</div>
+    </div>
+    <div class="insight red">
+      <div class="insight-title">TC irrecuperable: principal riesgo accionable</div>
+      <div class="insight-body">El 28% de las bajas con causa conocida se debe a rechazos reiterados de tarjeta. Una alerta temprana ante el primer rechazo y la oferta proactiva de actualización del medio de pago puede reducir significativamente este indicador.</div>
+    </div>
+    <div class="insight amber">
+      <div class="insight-title">Febrero y junio 2025: picos de baja a revisar</div>
+      <div class="insight-body">Con tasas de 12,6% y 12,2% respectivamente, estos meses duplican el promedio. Coinciden con alta carga de seguimiento. Reforzar la capacidad del equipo de retención en estos períodos es una medida inmediata de alto impacto.</div>
+    </div>
+    <div class="insight blue">
+      <div class="insight-title">El 32,9% de bajas sin causa: dato crítico faltante</div>
+      <div class="insight-body">Casi un tercio de las bajas no tienen motivo registrado, lo que bloquea el análisis de retención. Establecer el campo de motivo como obligatorio en el sistema generaría datos de alto valor para campañas futuras.</div>
+    </div>
+    <div class="insight green">
+      <div class="insight-title">Monto promedio creció +25,7% en el año</div>
+      <div class="insight-body">El ticket pasó de $14.546 en enero a $18.280 en noviembre 2025. Esta mejora del perfil del donante es una señal positiva de maduración de la estrategia de captación, aunque hay que monitorear el leve retroceso observado en 2026.</div>
+    </div>
+    <div class="insight amber">
+      <div class="insight-title">Calidad vs. cantidad: decisión estratégica pendiente</div>
+      <div class="insight-body">La correlación negativa del segundo semestre (r = −0,66) indica que aumentar el ticket promedio redujo el volumen. Si el objetivo es maximizar la recaudación total, se debe balancear el perfil del donante con la cobertura de plazas activas.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  Informe confidencial elaborado para UNICEF Argentina · Datos: ESTIMACION_NOTAS_DE_CREDITO_-_UNICEF.xlsx · Abril 2026
+</footer>
+
+<script>
+const months = ['Ene-25','Feb-25','Mar-25','Abr-25','May-25','Jun-25','Jul-25','Ago-25','Sep-25','Oct-25','Nov-25','Dic-25','Ene-26','Feb-26','Mar-26'];
+const altas  = [803,701,824,824,1032,1060,1223,1510,1109,980,943,907,828,634,802];
+const monto  = [14546,14791,15854,16298,15871,16469,16133,16713,16258,17827,18280,17063,17131,15937,15555];
+const total  = [116.8,103.7,130.6,134.3,163.8,174.6,197.3,252.4,180.3,174.7,172.4,154.8,141.8,101.0,124.8];
+const ufMonths = ['Nov-24','Dic-24','Ene-25','Feb-25','Mar-25','Abr-25','May-25','Jun-25','Jul-25','Ago-25','Sep-25','Oct-25'];
+const tasaBajas = [6.5,7.6,6.4,12.6,9.8,7.5,6.9,12.2,3.9,1.9,8.5,6.2];
+
+const grid = 'rgba(150,155,170,0.12)';
+const tick = '#9296A8';
+
+// Populate table
+const tbody = document.getElementById('tableBody');
+months.forEach((m,i) => {
+  const isPeak = altas[i] === Math.max(...altas);
+  const isMin  = total[i] === Math.min(...total);
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${m}</td>
+    <td class="${isPeak?'peak':''}">${altas[i].toLocaleString('es-AR')}</td>
+    <td>$${monto[i].toLocaleString('es-AR')}</td>
+    <td class="${isPeak?'peak':isMin?'min-val':''}">$${total[i].toFixed(1)}M</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// Chart 1: Altas + Monto
+const bcColors = altas.map((_,i) => i < 8 ? 'rgba(11,95,255,.72)' : i < 12 ? 'rgba(214,59,59,.68)' : 'rgba(140,144,160,.55)');
+new Chart(document.getElementById('chartAltas'), {
+  data: {
+    labels: months,
+    datasets: [
+      { type:'bar', label:'Altas', data: altas, backgroundColor: bcColors, yAxisID:'y', borderRadius: 4 },
+      { type:'line', label:'Monto prom', data: monto, borderColor:'#E07B00', backgroundColor:'transparent',
+        borderWidth:2.5, pointRadius:4, pointBackgroundColor:'#E07B00', yAxisID:'y2', tension:.35 }
+    ]
+  },
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ctx.datasetIndex===0 ? 'Altas: '+ctx.raw : 'Monto: $'+ctx.raw.toLocaleString('es-AR') }}},
+    scales:{
+      y:{ grid:{color:grid}, ticks:{color:tick,font:{size:11}}, title:{display:true,text:'Cantidad altas',color:tick,font:{size:11}} },
+      y2:{ position:'right', grid:{drawOnChartArea:false}, ticks:{color:'#B05E00',font:{size:11},callback:v=>'$'+v.toLocaleString('es-AR')}, title:{display:true,text:'Monto prom.',color:'#B05E00',font:{size:11}} },
+      x:{ ticks:{color:tick,font:{size:10},autoSkip:false,maxRotation:45}, grid:{color:grid} }
+    }
+  }
+});
+
+// Chart 2: Total
+new Chart(document.getElementById('chartTotal'), {
+  type:'bar',
+  data:{ labels: months, datasets:[{ data: total, backgroundColor: total.map(v => v===Math.max(...total)?'rgba(0,179,138,.85)':'rgba(11,95,255,.55)'), borderRadius:4 }] },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>'$'+ctx.raw.toFixed(1)+'M'}} },
+    scales:{
+      y:{ grid:{color:grid}, ticks:{color:tick,font:{size:10},callback:v=>'$'+v+'M'} },
+      x:{ ticks:{color:tick,font:{size:9},autoSkip:false,maxRotation:55}, grid:{color:grid} }
+    }
+  }
+});
+
+// Chart 3: Bajas
+new Chart(document.getElementById('chartBajas'), {
+  type:'bar',
+  data:{
+    labels: ufMonths,
+    datasets:[{ data: tasaBajas, backgroundColor: tasaBajas.map(v => v>10?'rgba(214,59,59,.75)':v>7?'rgba(224,123,0,.7)':'rgba(133,183,235,.75)'), borderRadius:4 }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      annotation:{},
+      tooltip:{callbacks:{label:ctx=>ctx.raw.toFixed(1)+'%'}}
+    },
+    scales:{
+      y:{ min:0, max:15, grid:{color:grid}, ticks:{color:tick,font:{size:11},callback:v=>v+'%'} },
+      x:{ ticks:{color:tick,font:{size:10},autoSkip:false,maxRotation:40}, grid:{color:grid} }
+    }
+  }
+});
+
+// Chart 4: Donut
+new Chart(document.getElementById('chartDonut'), {
+  type:'doughnut',
+  data:{
+    labels:['Sin causa','TC irrecup.','Problemas econ.','Se arrepintió','Desempleado','Otros'],
+    datasets:[{ data:[47,40,23,18,3,12], backgroundColor:['#C7D9FF','#FFBCBC','#FFE0A0','#C0EDD9','#E0D8FF','#E0E0E0'], borderWidth:2, borderColor:'#fff' }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false, cutout:'62%',
+    plugins:{ legend:{ position:'right', labels:{ font:{size:11}, padding:10, color:'#3A3D4A' }},
+      tooltip:{ callbacks:{ label: ctx => ctx.label+': '+ctx.raw+' ('+((ctx.raw/143)*100).toFixed(1)+'%)' }} }
+  }
+});
+
+// Chart 5: Scatter
+const scatterDatasets = [
+  { label:'Ene–Ago 25', data: months.slice(0,8).map((m,i)=>({x:monto[i],y:altas[i],label:m})), backgroundColor:'rgba(11,95,255,.8)', pointRadius:7, pointHoverRadius:9 },
+  { label:'Sep–Dic 25', data: months.slice(8,12).map((m,i)=>({x:monto[i+8],y:altas[i+8],label:m})), backgroundColor:'rgba(214,59,59,.8)', pointRadius:7, pointHoverRadius:9 },
+  { label:'2026', data: months.slice(12).map((m,i)=>({x:monto[i+12],y:altas[i+12],label:m})), backgroundColor:'rgba(140,144,160,.7)', pointRadius:6, pointHoverRadius:8 },
+];
+
+// Add trendline dataset
+const xs = monto, ys = altas;
+const n = xs.length, sx = xs.reduce((a,b)=>a+b), sy = ys.reduce((a,b)=>a+b);
+const sxy = xs.reduce((a,x,i)=>a+x*ys[i],0), sx2 = xs.reduce((a,x)=>a+x*x,0);
+const slope = (n*sxy - sx*sy) / (n*sx2 - sx*sx);
+const intcpt = (sy - slope*sx) / n;
+const xmin = Math.min(...xs)-200, xmax = Math.max(...xs)+200;
+scatterDatasets.push({ label:'Tendencia', data:[{x:xmin,y:slope*xmin+intcpt},{x:xmax,y:slope*xmax+intcpt}], type:'line', borderColor:'rgba(150,155,170,.5)', borderWidth:1.5, borderDash:[5,4], pointRadius:0, fill:false });
+
+new Chart(document.getElementById('chartScatter'), {
+  type:'scatter',
+  data:{ datasets: scatterDatasets },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false}, tooltip:{callbacks:{label:ctx=>ctx.raw.label ? ctx.raw.label+': '+ctx.raw.y+' altas · $'+ctx.raw.x.toLocaleString('es-AR') : ''}} },
+    scales:{
+      x:{ min:13000, max:20000, grid:{color:grid}, ticks:{color:tick,font:{size:10},callback:v=>'$'+v.toLocaleString('es-AR')}, title:{display:true,text:'Monto promedio ($)',color:tick,font:{size:11}} },
+      y:{ min:550, max:1650, grid:{color:grid}, ticks:{color:tick,font:{size:11}}, title:{display:true,text:'Cantidad de altas',color:tick,font:{size:11}} }
+    }
+  }
+});
+</script>
+</body>
+</html>
